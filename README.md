@@ -1,5 +1,7 @@
 # ACS conformance run — what a Claude Code session shows a Guardian, and what it never does
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24060923.svg)](https://doi.org/10.5281/zenodo.24060923)
+
 Raw records, the runner, and the report for one measurement of the OWASP **Agent Control Standard**
 (`GenAI-Security-Project/agent-control-standard`):
 
@@ -9,6 +11,8 @@ Raw records, the runner, and the report for one measurement of the OWASP **Agent
 
 This repository holds the record, not a conclusion about whether ACS is any good. The policy question
 (should a Guardian catch these?) is separate and is left to the people who own the specification.
+
+Archived at **DOI [10.5281/zenodo.24060923](https://doi.org/10.5281/zenodo.24060923)** (all versions: [10.5281/zenodo.24060922](https://doi.org/10.5281/zenodo.24060922)); the archived snapshot is this repository at `08761f1`.
 
 ## Order of events
 
