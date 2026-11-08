@@ -1,0 +1,86 @@
+name: acs-pilot
+
+# Runs one ACS conformance scenario per rep on a clean Linux runner:
+# real Claude Code -> ACS claude_code adapter -> example Guardian -> controlled endpoint.
+# The ACS tree is used as-is at `acs_ref`; nothing in it is patched, so the run is reproducible
+# from the commit named in the artifact.
+
+on:
+  workflow_dispatch:
+    inputs:
+      acs_ref:
+        description: "ACS commit to test (merged upstream, not a local patch)"
+        required: true
+        default: "db457a84393bd80954c9b70b2271a719bf7c61cd"
+      reps:
+        description: "Repetitions per scenario"
+        required: true
+        default: "3"
+      claude_version:
+        description: "claude-code npm version to pin"
+        required: true
+        default: "2.1.283"
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [complete, length, drop, reset, loop]
+    steps:
+      - name: Check out this repository (runner code)
+        uses: actions/checkout@v4
+
+      - name: Check out ACS at the pinned commit
+        uses: actions/checkout@v4
+        with:
+          repository: simin-yuan/agent-control-standard
+          ref: ${{ inputs.acs_ref }}
+          path: acs
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: astral-sh/setup-uv@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install the client under test
+        run: |
+          npm install -g @anthropic-ai/claude-code@${{ inputs.claude_version }}
+          claude --version
+
+      - name: Install the adapter and its test helpers
+        working-directory: acs/adapters
+        run: uv sync --locked
+
+      - name: Record what is under test
+        run: |
+          git -C acs rev-parse HEAD
+          git -C acs status --porcelain
+          python --version
+
+      - name: Run scenario ${{ matrix.mode }}
+        run: |
+          # The venv python is the interpreter the adapter and the Guardian must also use:
+          # `uv sync` installed `acs` into it, so the hook subprocess imports the same code.
+          acs/adapters/.venv/bin/python owasp-acs/pilot.py \
+            --acs acs/adapters \
+            --stub owasp-acs/stub_server.py \
+            --mode ${{ matrix.mode }} \
+            --reps ${{ inputs.reps }} \
+            --out out/${{ matrix.mode }}.json
+          cat out/${{ matrix.mode }}.json
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acs-${{ matrix.mode }}-${{ inputs.acs_ref }}
+          path: out/
+          if-no-files-found: warn
