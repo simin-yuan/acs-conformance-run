@@ -74,6 +74,8 @@ the Guardian), the Guardian's step log, and the files the client left behind.
 
 ## Licence and provenance
 
+Two licences, split by what the files are: `REPORT.md`, `FINDINGS.md`, `PREREGISTRATION.md`, `PROBE-20261107.md` and `evidence/` are **CC BY 4.0** ([`LICENSE`](LICENSE)) — reuse is fine, credit is required. Everything in `runner/` is **Apache-2.0** ([`LICENSE-APACHE-2.0`](LICENSE-APACHE-2.0)), the same licence as the upstream project, so anything taken from it can go back there without a licence question.
+
 The runner and the records are published so the measurement can be repeated; the report text is
 CC BY-SA 4.0 to match the project's own content licence. Nothing here is derived from private
 disclosures. `PREREGISTRATION.md` and `PROBE-20261107.md` are reproduced unedited.
