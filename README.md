@@ -83,3 +83,6 @@ Two licences, split by what the files are: `REPORT.md`, `FINDINGS.md`, `PREREGIS
 The runner and the records are published so the measurement can be repeated; the report text is
 CC BY-SA 4.0 to match the project's own content licence. Nothing here is derived from private
 disclosures. `PREREGISTRATION.md` and `PROBE-20261107.md` are reproduced unedited.
+---
+
+Part of the agent reliability toolkit → [agent-faultbench](https://github.com/simin-yuan/agent-faultbench)
